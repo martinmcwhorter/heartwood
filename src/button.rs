@@ -1,8 +1,4 @@
-use log::info;
 use sycamore::prelude::*;
-use sycamore::rt::JsCast;
-use web_sys::Event;
-use web_sys::HtmlElement;
 
 #[derive(Clone)]
 pub enum ButtonVariant {
@@ -31,9 +27,29 @@ impl Default for ButtonProps {
 }
 
 impl ButtonProps {
-    pub fn label(mut self, label: &str) -> Self {
+    pub fn label_from_str(mut self, label: &str) -> Self {
         let label = Signal::new(label.to_string());
         self.label = label.clone().handle();
+        return self;
+    }
+
+    pub fn label(mut self, label: ReadSignal<String>) -> Self {
+        self.label = label.clone();
+        return self;
+    }
+
+    pub fn on_click(mut self, on_click: Signal<bool>) -> Self {
+        self.on_click = on_click;
+        return self;
+    }
+
+    pub fn variant(mut self, variant: ButtonVariant) -> Self {
+        self.variant = variant;
+        return self;
+    }
+
+    pub fn disabled(mut self, disabled: Signal<bool>) -> Self {
+        self.disabled = disabled;
         return self;
     }
 }

@@ -44,30 +44,24 @@ fn main() {
     sycamore::render(|| {
         view! {
 
-            Button(ButtonProps {
-                on_click: clicked.clone(),
-                disabled: disable_all.clone(),
-                ..ButtonProps::default()
-                    .label("CONTAINED BUTTON")
-            })
+            Button(ButtonProps::default()
+                    .label_from_str("CONTAINED BUTTON")
+                    .on_click(clicked.clone())
+                    .disabled(disable_all.clone()))
             br()
 
-            Button(ButtonProps {
-                variant: ButtonVariant::Outlined,
-                on_click: clicked.clone(),
-                disabled: disable_all.clone(),
-                ..ButtonProps::default()
-                    .label("OUTLINED BUTTON")
-            })
+            Button(ButtonProps::default()
+                    .label_from_str("OUTLINED BUTTON")
+                    .variant(ButtonVariant::Outlined)
+                    .on_click(clicked.clone())
+                    .disabled(disable_all.clone()))
             br()
 
-            Button(ButtonProps {
-                variant: ButtonVariant::Text,
-                on_click: clicked.clone(),
-                disabled: disable_all.clone(),
-                ..ButtonProps::default()
-                    .label("TEXT BUTTON")
-            })
+            Button(ButtonProps::default()
+                    .label_from_str("TEXT BUTTON")
+                    .variant(ButtonVariant::Text)
+                    .on_click(clicked.clone())
+                    .disabled(disable_all.clone()))
             br()
 
             div(class="mdc-typography--display1") {
@@ -89,11 +83,9 @@ fn main() {
             }
 
             br()br()
-            Button(ButtonProps {
-                label: enable_disable_label,
-                on_click: disable_click.clone(),
-                ..ButtonProps::default()
-            })
+            Button(ButtonProps::default()
+                    .label(enable_disable_label.clone())
+                    .on_click(disable_click.clone()))
             br()
 
         }

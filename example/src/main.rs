@@ -70,12 +70,10 @@ fn main() {
             }
             br()
 
-            TextField(TextFieldProps {
-                label: "TEXT FIELD",
-                value: value.clone(),
-                disabled: disable_all.clone(),
-                ..TextFieldProps::default()
-            })
+            TextField(TextFieldProps::default()
+                      .label_from_str("TEXT FIELD")
+                      .value(value.clone())
+                      .disabled(disable_all.handle().clone()))
             br()br()
             div() {
                 "text field value: "

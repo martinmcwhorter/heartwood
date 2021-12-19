@@ -1,21 +1,44 @@
 use sycamore::prelude::*;
 use sycamore::rt::JsCast;
 use uuid::Uuid;
-use web_sys::{Event, HtmlInputElement, KeyboardEvent};
+use web_sys::{Event, HtmlInputElement};
 
 pub struct TextFieldProps {
-    pub label: &'static str,
+    pub label: ReadSignal<String>,
     pub value: Signal<String>,
-    pub disabled: Signal<bool>,
+    pub disabled: ReadSignal<bool>,
 }
 
 impl Default for TextFieldProps {
     fn default() -> Self {
         Self {
-            label: "",
+            label: Signal::new("".to_string()).handle(),
             value: Signal::new("".to_string()),
-            disabled: Signal::new(false),
+            disabled: Signal::new(false).handle(),
         }
+    }
+}
+
+impl TextFieldProps {
+    pub fn label_from_str(mut self, label: &str) -> Self {
+        let label = Signal::new(label.to_string());
+        self.label = label.clone().handle();
+        return self;
+    }
+
+    pub fn label(mut self, label: ReadSignal<String>) -> Self {
+        self.label = label.clone();
+        return self;
+    }
+
+    pub fn value(mut self, value: Signal<String>) -> Self {
+        self.value = value;
+        return self;
+    }
+
+    pub fn disabled(mut self, disabled: ReadSignal<bool>) -> Self {
+        self.disabled = disabled.clone();
+        return self;
     }
 }
 
@@ -65,7 +88,7 @@ pub fn text_field(props: TextFieldProps) -> View<G> {
         label(class=classes()) {
             span(class="mdc-text-field__ripple")
             span(class=floating_label_classes(), id=id) {
-                (props.label)
+                (props.label.get())
             }
             input(class="mdc-text-field__input", type="text",
                 aria-labelledby=id, bind:value=props.value, on:input=on_input, on:focus=focus_handler, on:blur=blur_handler,

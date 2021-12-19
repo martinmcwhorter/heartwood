@@ -6,11 +6,23 @@ use web_sys::{Event, HtmlInputElement, KeyboardEvent};
 pub struct TextFieldProps {
     pub label: &'static str,
     pub value: Signal<String>,
+    pub disabled: Signal<bool>,
+}
+
+impl Default for TextFieldProps {
+    fn default() -> Self {
+        Self {
+            label: "",
+            value: Signal::new("".to_string()),
+            disabled: Signal::new(false),
+        }
+    }
 }
 
 #[component(TextField<G>)]
 pub fn text_field(props: TextFieldProps) -> View<G> {
     let value = props.value.clone();
+    let disabled = props.disabled.clone();
 
     let on_input = cloned!((value) => move |event: Event| {
         let target: HtmlInputElement = event.target().unwrap().unchecked_into();
@@ -39,11 +51,14 @@ pub fn text_field(props: TextFieldProps) -> View<G> {
         } else { "" })
     });
 
-    let classes = cloned!((focus, value) => move || {
-        format!("mdc-text-field mdc-text-field--filled{}",
-        if *focus.get() || *value.get() != "" {
-            " mdc-text-field--focused"
-        } else { "" })
+    let classes = cloned!((focus, value, disabled) => move || {
+        format!("mdc-text-field mdc-text-field--filled{}{}",
+            if *focus.get() || *value.get() != "" {
+                " mdc-text-field--focused"
+            } else { "" },
+            if *disabled.get() {
+                " mdc-text-field--disabled" } else { "" }
+        )
     });
 
     view! {
@@ -53,7 +68,8 @@ pub fn text_field(props: TextFieldProps) -> View<G> {
                 (props.label)
             }
             input(class="mdc-text-field__input", type="text",
-                aria-labelledby=id, bind:value=props.value, on:input=on_input, on:focus=focus_handler, on:blur=blur_handler)
+                aria-labelledby=id, bind:value=props.value, on:input=on_input, on:focus=focus_handler, on:blur=blur_handler,
+                disabled=*props.disabled.get())
             span(class=line_classes())
         }
     }

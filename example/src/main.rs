@@ -37,7 +37,7 @@ fn main() {
     });
 
     let enable_disable_label = create_selector(cloned!((disable_all) => move || 
-        if *disable_all.get() { "DISABLE ALL".to_string() } else { "ENABLE ALL".to_string() } ));
+        if *disable_all.get() { "ENABLE ALL".to_string() } else { "DISABLE ALL".to_string() } ));
 
     let value = Signal::new("".to_string());
 
@@ -79,6 +79,8 @@ fn main() {
             TextField(TextFieldProps {
                 label: "TEXT FIELD",
                 value: value.clone(),
+                disabled: disable_all.clone(),
+                ..TextFieldProps::default()
             })
             br()br()
             div() {

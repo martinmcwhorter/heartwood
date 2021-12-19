@@ -12,7 +12,7 @@ pub struct ButtonProps {
     pub variant: ButtonVariant,
     pub label: ReadSignal<String>,
     pub on_click: Signal<bool>,
-    pub disabled: Signal<bool>,
+    pub disabled: ReadSignal<bool>,
 }
 
 impl Default for ButtonProps {
@@ -21,7 +21,7 @@ impl Default for ButtonProps {
             variant: ButtonVariant::Contained,
             label: Signal::new("".to_string()).handle(),
             on_click: Signal::new(false),
-            disabled: Signal::new(false),
+            disabled: Signal::new(false).handle(),
         }
     }
 }
@@ -48,7 +48,7 @@ impl ButtonProps {
         return self;
     }
 
-    pub fn disabled(mut self, disabled: Signal<bool>) -> Self {
+    pub fn disabled(mut self, disabled: ReadSignal<bool>) -> Self {
         self.disabled = disabled;
         return self;
     }

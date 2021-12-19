@@ -47,21 +47,21 @@ fn main() {
             Button(ButtonProps::default()
                     .label_from_str("CONTAINED BUTTON")
                     .on_click(clicked.clone())
-                    .disabled(disable_all.clone()))
+                    .disabled(disable_all.handle().clone()))
             br()
 
             Button(ButtonProps::default()
                     .label_from_str("OUTLINED BUTTON")
                     .variant(ButtonVariant::Outlined)
                     .on_click(clicked.clone())
-                    .disabled(disable_all.clone()))
+                    .disabled(disable_all.handle().clone()))
             br()
 
             Button(ButtonProps::default()
                     .label_from_str("TEXT BUTTON")
                     .variant(ButtonVariant::Text)
                     .on_click(clicked.clone())
-                    .disabled(disable_all.clone()))
+                    .disabled(disable_all.handle().clone()))
             br()
 
             div(class="mdc-typography--display1") {

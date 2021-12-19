@@ -45,28 +45,28 @@ fn main() {
         view! {
 
             Button(ButtonProps {
-                label: Signal::new("CONTAINED BUTTON".to_string()).handle(),
                 on_click: clicked.clone(),
                 disabled: disable_all.clone(),
                 ..ButtonProps::default()
+                    .label("CONTAINED BUTTON")
             })
             br()
 
             Button(ButtonProps {
                 variant: ButtonVariant::Outlined,
-                label: Signal::new("OUTLINED BUTTON".to_string()).handle(),
                 on_click: clicked.clone(),
                 disabled: disable_all.clone(),
                 ..ButtonProps::default()
+                    .label("OUTLINED BUTTON")
             })
             br()
 
             Button(ButtonProps {
                 variant: ButtonVariant::Text,
-                label: Signal::new("TEXT BUTTON".to_string()).handle(),
                 on_click: clicked.clone(),
                 disabled: disable_all.clone(),
                 ..ButtonProps::default()
+                    .label("TEXT BUTTON")
             })
             br()
 

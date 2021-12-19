@@ -30,6 +30,14 @@ impl Default for ButtonProps {
     }
 }
 
+impl ButtonProps {
+    pub fn label(mut self, label: &str) -> Self {
+        let label = Signal::new(label.to_string());
+        self.label = label.clone().handle();
+        return self;
+    }
+}
+
 #[component(Button<G>)]
 pub fn button(props: ButtonProps) -> View<G> {
     let handle_click = move |_| {

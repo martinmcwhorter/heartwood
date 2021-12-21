@@ -7,34 +7,16 @@ use sycamore::prelude::*;
 fn main() {
     console_log::init_with_level(Level::Debug);
 
-    let clicked = Signal::new(false);
     let clicked_count = Signal::new(0);
     let disable_all = Signal::new(false);
-    let disable_click = Signal::new(false);
 
-    create_effect({
-        let clicked = clicked.clone();
-        let clicked_count = clicked_count.clone();
-        move || {
-            if *clicked.get() {
-                clicked_count.set(*clicked_count.get() + 1);
-            }
-        }
-    });
+    let handle_click = Box::new(cloned!(clicked_count => move |_| {
+        clicked_count.set(*clicked_count.get() + 1);
+    }));
 
-    create_effect({
-        let disable_click = disable_click.clone();
-        let disable_all = disable_all.clone();
-        move || {
-            if *disable_click.get() {
-                if *disable_all.get() {
-                    disable_all.set(false);
-                } else {
-                    disable_all.set(true)
-                }
-            }
-        }
-    });
+    let disable_click = Box::new(cloned!(disable_all => move |_| {
+        disable_all.set(!*disable_all.get());
+    }));
 
     let enable_disable_label = create_selector(cloned!((disable_all) => move || 
         if *disable_all.get() { "ENABLE ALL".to_string() } else { "DISABLE ALL".to_string() } ));
@@ -46,21 +28,21 @@ fn main() {
 
             Button(ButtonProps::default()
                     .label_from_str("CONTAINED BUTTON")
-                    .on_click(clicked.clone())
+                    .on_click(handle_click.clone())
                     .disabled(disable_all.handle().clone()))
             br()
 
             Button(ButtonProps::default()
                     .label_from_str("OUTLINED BUTTON")
                     .variant(ButtonVariant::Outlined)
-                    .on_click(clicked.clone())
+                    .on_click(handle_click.clone())
                     .disabled(disable_all.handle().clone()))
             br()
 
             Button(ButtonProps::default()
                     .label_from_str("TEXT BUTTON")
                     .variant(ButtonVariant::Text)
-                    .on_click(clicked.clone())
+                    .on_click(handle_click)
                     .disabled(disable_all.handle().clone()))
             br()
 
@@ -83,7 +65,7 @@ fn main() {
             br()br()
             Button(ButtonProps::default()
                     .label(enable_disable_label.clone())
-                    .on_click(disable_click.clone()))
+                    .on_click(disable_click))
             br()
 
         }

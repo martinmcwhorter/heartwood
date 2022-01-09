@@ -1,4 +1,5 @@
 use sycamore::prelude::*;
+use web_sys::Event;
 
 #[derive(Clone)]
 pub enum ButtonVariant {
@@ -7,11 +8,10 @@ pub enum ButtonVariant {
     Text,
 }
 
-#[derive(Clone)]
 pub struct ButtonProps {
     pub variant: ButtonVariant,
     pub label: ReadSignal<String>,
-    pub on_click: Signal<bool>,
+    pub on_click: Box<dyn Fn(Event)>,
     pub disabled: ReadSignal<bool>,
 }
 
@@ -20,7 +20,7 @@ impl Default for ButtonProps {
         Self {
             variant: ButtonVariant::Contained,
             label: Signal::new("".to_string()).handle(),
-            on_click: Signal::new(false),
+            on_click: Box::new(|_| {}),
             disabled: Signal::new(false).handle(),
         }
     }
@@ -38,7 +38,7 @@ impl ButtonProps {
         return self;
     }
 
-    pub fn on_click(mut self, on_click: Signal<bool>) -> Self {
+    pub fn on_click(mut self, on_click: Box<dyn Fn(Event)>) -> Self {
         self.on_click = on_click;
         return self;
     }
@@ -56,10 +56,6 @@ impl ButtonProps {
 
 #[component(Button<G>)]
 pub fn button(props: ButtonProps) -> View<G> {
-    let handle_click = move |_| {
-        (props.on_click.set(true));
-    };
-
     let variant = match props.variant {
         ButtonVariant::Contained => "mdc-button--raised",
         ButtonVariant::Outlined => "mdc-button--outlined",
@@ -69,7 +65,7 @@ pub fn button(props: ButtonProps) -> View<G> {
     let button_classes = format!("mdc-button {} mdc-button--touch", variant);
 
     view! {
-        button(class=button_classes, on:click=handle_click, disabled=*props.disabled.get()) {
+        button(class=button_classes, on:click=props.on_click, disabled=*props.disabled.get()) {
             span(class="mdc-button__ripple")
             span(class="mdc-button__touch")
             span(class="mdc-button__focus-ring")

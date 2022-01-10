@@ -1,4 +1,5 @@
 use heartwood::button::*;
+use heartwood::checkbox::*;
 use heartwood::text_field::*;
 use log::info;
 use log::Level;
@@ -22,6 +23,8 @@ fn main() {
         if *disable_all.get() { "ENABLE ALL".to_string() } else { "DISABLE ALL".to_string() } ));
 
     let value = Signal::new("".to_string());
+
+    let indeterminate = Signal::new(true);
 
     sycamore::render(|| {
         view! {
@@ -63,10 +66,15 @@ fn main() {
             }
 
             br()br()
-            Button(ButtonProps::default()
-                    .label(enable_disable_label.clone())
-                    .on_click(disable_click))
+            Checkbox(CheckboxProps::default()
+                .disabled(disable_all.handle().clone())
+                .indeterminate(indeterminate.handle().clone())
+            )
+
             br()
+            Button(ButtonProps::default()
+                .label(enable_disable_label.clone())
+                .on_click(disable_click))
 
         }
     });
